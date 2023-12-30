@@ -57,6 +57,9 @@ canvas {
 
 /* Media Query for Smaller Screens */
 @media only screen and (max-width: 600px) {
+  *{
+    box-sizing: border-box;
+  }
   canvas{
     height: 400px;
   }
