@@ -7,94 +7,73 @@ const increaseBtn = document.getElementById('increase');
 const decreaseBtn = document.getElementById('decrease');
 
 let size = 30;
-let x = undefined;
-let y = undefined;
-let color = 'black';
-let isPressed = false;
+let isDrawing = false;
 
-canvas.addEventListener('mousedown', (e) =>
-{
-    isPressed = true;
+canvas.addEventListener('mousedown', startDrawing);
+canvas.addEventListener('mouseup', stopDrawing);
+canvas.addEventListener('mousemove', draw);
 
-    x = e.offsetX;
-    y = e.offsetY;
-});
+// Touch events for mobile
+canvas.addEventListener('touchstart', startDrawing);
+canvas.addEventListener('touchmove', draw);
+canvas.addEventListener('touchend', stopDrawing);
 
-canvas.addEventListener('mouseup', () =>
-{
-    isPressed = false;
+increaseBtn.addEventListener('click', increaseSize);
+decreaseBtn.addEventListener('click', decreaseSize);
+colorEl.addEventListener('change', updateColor);
+clearEl.addEventListener('click', clearCanvas);
 
-    x = undefined;
-    y = undefined;
-});
-
-canvas.addEventListener('mousemove', (e) =>
-{
-    if (isPressed)
-    {
-        const x2 = e.offsetX;
-        const y2 = e.offsetY;
-
-        drawCircle(x2, y2);
-        drawLine(x, y, x2, y2);
-        x = x2;
-        y = y2;
-    }
-});
-
-function drawCircle(x, y)
-{
-    ctx.beginPath();
-    ctx.arc(x, y, size, 0, Math.PI * 2);
-    ctx.fillStyle = color;
-    ctx.fill();
+function startDrawing(e) {
+  isDrawing = true;
+  draw(e);
 }
 
-function drawLine(x1, y1, x2, y2)
-{
-    ctx.beginPath();
-    ctx.moveTo(x1, y1);
-    ctx.lineTo(x2, y2);
-    ctx.strokeStyle = color;
-    ctx.lineWidth = size * 2;
-    ctx.stroke();
+function draw(e) {
+  if (!isDrawing) return;
+
+  const x = e.type === 'touchmove' ? e.touches[0].clientX : e.offsetX;
+  const y = e.type === 'touchmove' ? e.touches[0].clientY : e.offsetY;
+
+  ctx.lineWidth = size * 2;
+  ctx.lineCap = 'round';
+  ctx.strokeStyle = color;
+
+  ctx.lineTo(x, y);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(x, y);
 }
 
-increaseBtn.addEventListener('click', () =>
-{
-    size += 5;
+function stopDrawing() {
+  isDrawing = false;
+  ctx.beginPath();
+}
 
-    if (size > 50)
-    {
-        size = 50;
-    }
+function increaseSize() {
+  size += 5;
+  if (size > 50) {
+    size = 50;
+  }
+  updateSizeOnScreen();
+}
 
-    updateSizeOnScreen();
-});
+function decreaseSize() {
+  size -= 5;
+  if (size < 5) {
+    size = 5;
+  }
+  updateSizeOnScreen();
+}
 
-decreaseBtn.addEventListener('click', () =>
-{
-    size -= 5;
+function updateColor(e) {
+  color = e.target.value;
+}
 
-    if (size < 5)
-    {
-        size = 5;
-    }
+function clearCanvas() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
 
-    updateSizeOnScreen();
-});
-
-colorEl.addEventListener('change', (e) =>
-{
-    color = e.target.value;
-});
-
-clearEl.addEventListener('click', () =>
-{
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-});
-
-function updateSizeOnScreen()
-{
-    sizeEl.innerText = size;
+function updateSizeOnScreen() {
+  sizeEl.innerText = size;
 }
