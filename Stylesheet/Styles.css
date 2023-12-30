@@ -54,6 +54,12 @@ canvas {
 .toolbox > *:last-child {
   margin-left: auto;
 }
+footer{
+    color:white;
+  }
+  footer a{
+    color:white;
+  }
 
 /* Media Query for Smaller Screens */
 @media only screen and (max-width: 600px) {
