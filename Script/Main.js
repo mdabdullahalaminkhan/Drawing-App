@@ -6,7 +6,8 @@ const clearEl = document.getElementById('clear');
 const increaseBtn = document.getElementById('increase');
 const decreaseBtn = document.getElementById('decrease');
 
-let size = 30;
+let size = 5;
+updateSizeOnScreen();
 let isDrawing = false;
 
 canvas.addEventListener('mousedown', startDrawing);
