@@ -31,8 +31,9 @@ function startDrawing(e) {
 function draw(e) {
   if (!isDrawing) return;
 
-  const x = e.type === 'touchmove' ? e.touches[0].clientX : e.offsetX;
-  const y = e.type === 'touchmove' ? e.touches[0].clientY : e.offsetY;
+  const rect = canvas.getBoundingClientRect();
+  const x = (e.clientX - rect.left) * (canvas.width / rect.width);
+  const y = (e.clientY - rect.top) * (canvas.height / rect.height);
 
   ctx.lineWidth = size * 2;
   ctx.lineCap = 'round';
